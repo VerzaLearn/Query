@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gimkit Quiz Runner</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="/socket.io/socket.io.js"></script>
+</head>
+<body>
+    <div id="app">
+        <header>
+            <h1 class="logo">Quiz.R.</h1>
+            <div id="room-code-display" class="code-display"></div>
+        </header>
+
+        <main id="screen-container">
+            <div id="join-screen" class="screen active">
+                <h2>Join Game</h2>
+                <input type="text" id="join-code" placeholder="6-Character Code" maxlength="6">
+                <input type="text" id="player-name" placeholder="Your Name">
+                <button id="join-button">JOIN GAME</button>
+            </div>
+
+            <div id="host-config-screen" class="screen">
+                <h2>Setup Game</h2>
+                <select id="question-set-select"></select>
+                <div class="mode-select">
+                    <label>
+                        <input type="radio" name="game-mode" value="Classic: Time" checked> Classic: Time
+                    </label>
+                    <label>
+                        <input type="radio" name="game-mode" value="Classic: Race"> Classic: Race
+                    </label>
+                </div>
+                
+                <div id="time-config">
+                    <label for="time-limit">Time Limit (mins)</label>
+                    <input type="number" id="time-limit" value="10" min="5" max="60">
+                </div>
+                
+                <div id="race-config" style="display:none;">
+                    <label for="goal-amount">Money Goal</label>
+                    <input type="number" id="goal-amount" value="5000" min="1000">
+                </div>
+
+                <button id="create-room-button">CREATE ROOM</button>
+            </div>
+
+            <div id="lobby-screen" class="screen">
+                <h3>Lobby</h3>
+                <ul id="lobby-list"></ul>
+                <button id="start-game-button" disabled>START GAME</button>
+            </div>
+            
+            <div id="game-screen" class="screen">
+                <div id="stats-bar">
+                    <span id="stat-progress" class="stat-progress"></span>
+                    <span id="stat-money" class="stat-money">Money: $0</span>
+                    <span id="stat-streak" class="stat-streak">Streak: 0</span>
+                    <button id="shop-open-button" class="shop-button">SHOP</button>
+                </div>
+                
+                <div class="game-area">
+                    <div id="question-panel">
+                        <h3 id="question-text"></h3>
+                        <div id="answer-choices" class="choices-grid"></div>
+                    </div>
+                    
+                    <div id="feedback-display" class="feedback-animation"></div>
+                </div>
+
+                <div id="leaderboard" class="leaderboard">
+                    <h4>Rankings</h4>
+                    <ol id="leaderboard-list"></ol>
+                </div>
+            </div>
+
+            <div id="shop-screen" class="screen">
+                <h2>Upgrade Shop</h2>
+                <div class="shop-items">
+                    <button class="shop-upgrade-btn" data-type="multiplier">
+                        <div class="title">Multiplier (Lvl <span id="mult-lvl">1</span>)</div>
+                        <div class="cost">Cost: $<span id="mult-cost">2000</span></div>
+                    </button>
+                    <button class="shop-upgrade-btn" data-type="streak_bonus">
+                        <div class="title">Streak Bonus (Lvl <span id="sb-lvl">1</span>)</div>
+                        <div class="cost">Cost: $<span id="sb-cost">1000</span></div>
+                    </button>
+                    <button class="shop-upgrade-btn" data-type="insurance">
+                        <div class="title">Insurance (<span id="ins-count">1</span>)</div>
+                        <div class="cost">Cost: $2500</div>
+                    </button>
+                </div>
+                <button id="shop-close-button">BACK TO GAME</button>
+            </div>
+
+            <div id="end-screen" class="screen">
+                <h2>Game Over!</h2>
+                <h3 id="winner-announcement"></h3>
+                <ol id="final-rankings"></ol>
+            </div>
+        </main>
+    </div>
+
+    <script src="client.js"></script>
+</body>
+</html>
